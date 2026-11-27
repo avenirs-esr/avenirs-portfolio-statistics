@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatisticEventSpecification.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">avenirs-portfolio-statistics</a> &gt; <a href="index.source.html" class="el_package">fr.avenirsesr.portfolio.statistics.event.infrastructure.adapter.specification</a> &gt; <span class="el_source">StatisticEventSpecification.java</span></div><h1>StatisticEventSpecification.java</h1><pre class="source lang-java linenums">package fr.avenirsesr.portfolio.statistics.event.infrastructure.adapter.specification;
+
+import fr.avenirsesr.portfolio.common.data.domain.model.DateFilter;
+import fr.avenirsesr.portfolio.common.statistic.domain.model.enums.EStatisticEventType;
+import fr.avenirsesr.portfolio.statistics.event.domain.model.StatisticEventCountCriteria;
+import fr.avenirsesr.portfolio.statistics.event.infrastructure.adapter.model.StatisticEventEntity;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.UUID;
+import org.springframework.data.jpa.domain.Specification;
+
+/** Dates are interpreted in UTC; both bounds of the date filter are inclusive days. */
+public final class StatisticEventSpecification {
+  private static final String OCCURRED_AT = &quot;occurredAt&quot;;
+
+  private StatisticEventSpecification() {}
+
+  public static Specification&lt;StatisticEventEntity&gt; matching(StatisticEventCountCriteria criteria) {
+<span class="fc" id="L20">    DateFilter dateFilter = criteria.dateFilter();</span>
+<span class="fc" id="L21">    return withEventType(criteria.eventType())</span>
+<span class="fc" id="L22">        .and(withInstitutionId(criteria.institutionId()))</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        .and(occurredFrom(dateFilter == null ? null : dateFilter.fromDate()))</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        .and(occurredUntil(dateFilter == null ? null : dateFilter.toDate()));</span>
+  }
+
+  public static Specification&lt;StatisticEventEntity&gt; withEventType(EStatisticEventType eventType) {
+<span class="fc bfc" id="L28" title="All 2 branches covered.">    if (eventType == null) {</span>
+<span class="fc" id="L29">      return Specification.unrestricted();</span>
+    }
+<span class="fc" id="L31">    return (root, query, cb) -&gt; cb.equal(root.get(&quot;eventType&quot;), eventType);</span>
+  }
+
+  public static Specification&lt;StatisticEventEntity&gt; withInstitutionId(UUID institutionId) {
+<span class="fc bfc" id="L35" title="All 2 branches covered.">    if (institutionId == null) {</span>
+<span class="fc" id="L36">      return Specification.unrestricted();</span>
+    }
+<span class="fc" id="L38">    return (root, query, cb) -&gt; cb.equal(root.get(&quot;institutionId&quot;), institutionId);</span>
+  }
+
+  public static Specification&lt;StatisticEventEntity&gt; occurredFrom(LocalDate fromDate) {
+<span class="fc bfc" id="L42" title="All 2 branches covered.">    if (fromDate == null) {</span>
+<span class="fc" id="L43">      return Specification.unrestricted();</span>
+    }
+<span class="fc" id="L45">    Instant from = fromDate.atStartOfDay(ZoneOffset.UTC).toInstant();</span>
+<span class="fc" id="L46">    return (root, query, cb) -&gt; cb.greaterThanOrEqualTo(root.get(OCCURRED_AT), from);</span>
+  }
+
+  public static Specification&lt;StatisticEventEntity&gt; occurredUntil(LocalDate toDate) {
+<span class="fc bfc" id="L50" title="All 2 branches covered.">    if (toDate == null) {</span>
+<span class="fc" id="L51">      return Specification.unrestricted();</span>
+    }
+<span class="fc" id="L53">    Instant until = toDate.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();</span>
+<span class="fc" id="L54">    return (root, query, cb) -&gt; cb.lessThan(root.get(OCCURRED_AT), until);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
