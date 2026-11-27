@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<ruleset name="Custom PMD rules"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0
+                             https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>Custom ruleset</description>
+
+    <rule ref="category/java/bestpractices.xml">
+        <exclude name="GuardLogStatement"/>
+        <exclude name="ImplicitFunctionalInterface"/>
+        <!--
+          These two contradict each other on an enum switch that also handles null:
+          NonExhaustiveSwitch does not accept a bare `case null` as total and asks for a
+          `default`, while ExhaustiveSwitchHasDefault rejects that `default` as redundant.
+          The only form satisfying both, `case null, default ->`, cannot be parsed by the
+          google-java-format version the lint pipeline runs, so the formatter rejects it.
+        -->
+        <exclude name="NonExhaustiveSwitch"/>
+        <exclude name="ExhaustiveSwitchHasDefault"/>
+    </rule>
+
+</ruleset>

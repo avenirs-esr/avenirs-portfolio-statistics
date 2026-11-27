@@ -1,0 +1,54 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="nathp (generated)" id="1795600800000-1">
+        <createTable tableName="statistic_event">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="statistic_eventPK"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_type" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="occurred_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_category" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="institution_id" type="UUID"/>
+            <column name="program_id" type="UUID"/>
+            <column name="object_type" type="VARCHAR(64)"/>
+            <column name="object_id" type="UUID"/>
+            <column name="metadata" type="JSONB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="nathp (generated)" id="1795600800000-2">
+        <createIndex indexName="idx_statistic_event_type_occurred_at" tableName="statistic_event">
+            <column name="event_type"/>
+            <column name="occurred_at"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="nathp (generated)" id="1795600800000-3">
+        <createIndex indexName="idx_statistic_event_institution_occurred_at" tableName="statistic_event">
+            <column name="institution_id"/>
+            <column name="occurred_at"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="nathp (generated)" id="1795600800000-4">
+        <createIndex indexName="idx_statistic_event_user_occurred_at" tableName="statistic_event">
+            <column name="user_id"/>
+            <column name="occurred_at"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
